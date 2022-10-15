@@ -5,20 +5,22 @@ use as it produces the smallest (working) firmware.
 
 The general process is as follows:
 
-* install all required dependencies: gcc-avr, avr-libc, make and python3.
+* install all required dependencies: gcc-avr, avr-libc, cmake, make and python3.
 * compile the code
 * use one of the products for flashing
 
 Compilation in a shell works like this:
 
 ```sh
-cd firmware
-make clean
+mkdir -p build && cd build
+cmake ..
 make
 ```
 
 `p600firmware.bin` and `p600firmware.syx` are the most relevant build
-products for flashing via USB or MIDI, respectively.
+products for flashing via USB or MIDI, respectively. These files are
+created by default. Try `make help` for a list of all available build
+targets.
 
 ### Using docker or podman
 
@@ -36,17 +38,17 @@ An overview of the several gcc-avr versions for several Alpine releases can be f
 
 ```sh
 # Build gcc 12 using Alpine Linux edge (default)
-docker build  -t avr-toolchain:12 . 
+docker build -t avr-toolchain:12 .
 
 # Build gcc 11 using Alpine Linux 3.16
-docker build --build-arg ALPINE_VERSION=3.15 -t avr-toolchain:11 . 
+docker build --build-arg ALPINE_VERSION=3.16 -t avr-toolchain:11 .
 
 # Build gcc 10 using Alpine Linux 3.15
 docker build --build-arg ALPINE_VERSION=3.15 -t avr-toolchain:10 . 
 
 # Compile project
-docker run --rm -v $(pwd):/build avr-toolchain:11 make -C firmware clean
-docker run --rm -v $(pwd):/build avr-toolchain:11 make -C firmware
+docker run --rm -v $(pwd):/build avr-toolchain:11 \
+  sh -c "mkdir -p build && cd build && cmake .. && make"
 ```
 
 ### Building on MacOS
