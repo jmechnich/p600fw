@@ -95,3 +95,5 @@ add_custom_command(
   DEPENDS bin
 )
 add_custom_target(syx ALL DEPENDS ${PRODUCT_NAME}.syx)
+
+add_custom_target(sendsyx p600_send ${PRODUCT_NAME}.syx DEPENDS ${PRODUCT_NAME}.syx)
